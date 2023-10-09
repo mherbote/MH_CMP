@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{09C0258D-8C18-4780-B022-7ECDB86D5023}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="MH_CMP.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\cmp32p\Cmp32p.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="MH_CMP">
+        <MSBuild Projects="MH_CMP.dproj"/>
+    </Target>
+    <Target Name="MH_CMP:Clean">
+        <MSBuild Projects="MH_CMP.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MH_CMP:Make">
+        <MSBuild Projects="MH_CMP.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Cmp32p">
+        <MSBuild Projects="..\cmp32p\Cmp32p.dproj"/>
+    </Target>
+    <Target Name="Cmp32p:Clean">
+        <MSBuild Projects="..\cmp32p\Cmp32p.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Cmp32p:Make">
+        <MSBuild Projects="..\cmp32p\Cmp32p.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="MH_CMP;Cmp32p"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="MH_CMP:Clean;Cmp32p:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="MH_CMP:Make;Cmp32p:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
