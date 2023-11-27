@@ -4,8 +4,8 @@ object Form1: TForm1
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'MH_CMP V2 - Compare and Delete (source)'
-  ClientHeight = 370
-  ClientWidth = 990
+  ClientHeight = 368
+  ClientWidth = 982
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -6341,7 +6341,7 @@ object Form1: TForm1
     Width = 152
     Height = 14
     Alignment = taCenter
-    Caption = '(c) Marcus Herbote, 2021-2023'
+    Caption = '(c) Marcus Herbote, 2021-2024'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clGrayText
     Font.Height = -11
@@ -6523,5 +6523,25 @@ object Form1: TForm1
     ParentFont = False
     ReadOnly = True
     TabOrder = 10
+  end
+  object Anhalten: TButton
+    Left = 784
+    Top = 251
+    Width = 75
+    Height = 25
+    Caption = 'Anhalten'
+    TabOrder = 11
+    Visible = False
+    OnClick = AnhaltenClick
+  end
+  object Beenden: TButton
+    Left = 903
+    Top = 251
+    Width = 75
+    Height = 25
+    Caption = 'Beenden'
+    TabOrder = 12
+    Visible = False
+    OnClick = BeendenClick
   end
 end

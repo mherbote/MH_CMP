@@ -126,6 +126,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>MH_CMP1.ico</Icon_MainIcon>
+        <Debugger_RunParams>D:\2\. &quot;v:\99 Multimedia\02 Filme\1 Dokus\_5G\.&quot;</Debugger_RunParams>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

@@ -33,8 +33,12 @@ type
     empty: TEdit;
     Label11: TLabel;
     Path: TEdit;
+    Anhalten: TButton;
+    Beenden: TButton;
     procedure OnActivate1(Sender: TObject);
     procedure OnClose1(Sender: TObject; var Action: TCloseAction);
+    procedure AnhaltenClick(Sender: TObject);
+    procedure BeendenClick(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -55,6 +59,7 @@ var
     AnzPath1,
     FileBytes1,
     FileBytesCMP1 : Int64;
+    Pause         : boolean;
 
 
 implementation
@@ -126,7 +131,7 @@ begin dd:=FindFirst(Verz+'\*.*',faAnyFile,SRec); anz:=0;
                     end;
 end;
 
-function cmpDateien(datei1,datei2:String):Boolean;
+function cmpDateien(datei1,datei2:string):Boolean;
   var dl1,dl2   : Int64;
       ende,
       gleich    : Boolean;
@@ -144,6 +149,7 @@ begin
       FileBytes1    := 0; Form1.FileBytes.Text    := System.SysUtils.IntToStr(FileBytes1);
       FileBytesCMP1 := 0; Form1.FileBytesCMP.Text := System.SysUtils.IntToStr(FileBytesCMP1);
       Form1.Refresh;
+      Form1.Anhalten.Visible := true;
 
       if FileExists(datei2)
       then begin {AssignFile(in2,datei2); FileMode:=0; Reset(in2); dl2:=FileSize(in2); Close(in2);}
@@ -160,25 +166,29 @@ begin
                             ende:=FALSE;
 
                             while (dl1>0) and not ende do
-                            begin if dl1>cBufsize then j:=cBufsize
+                            begin
+                                  while Pause do
+                                  begin sleep(100);
+                                        Application.ProcessMessages;
+                                  end;
+                                  if dl1>cBufsize then j:=cBufsize
                                                   else j:=dl1;
 
                                   {$I-}
-                                         BlockRead (Dat1,buf1[1],1); if IOResult<>0 then ende:=TRUE;
-                                         BlockRead (Dat2,buf2[1],1); if IOResult<>0 then ende:=TRUE;
+                                       BlockRead (Dat1,buf1[1],1); if IOResult<>0 then ende:=TRUE;
+                                       BlockRead (Dat2,buf2[1],1); if IOResult<>0 then ende:=TRUE;
                                   {$I+}
 
                                   for i:=1 to j do
-                                    begin
-                                          if buf1[i]<>buf2[i] then gleich:=FALSE;
-                                          FileBytesCMP1 := FileBytesCMP1 + 1;
-                                    end;
+                                  begin
+                                        if buf1[i]<>buf2[i] then gleich:=FALSE;
+                                        FileBytesCMP1 := FileBytesCMP1 + 1;
+                                  end;
 
                                   dl1:=dl1-j; dl2:=dl2-j;
                                   TF.ThousandSeparator := '.';
                                   Form1.FileBytesCMP.Text := System.SysUtils.FormatFloat('0,',FileBytesCMP1); {IntToStr(FileBytesCMP1);}
                                   Application.ProcessMessages;
-
                             end;
 
                             Close(Dat1); Close(Dat2);
@@ -228,6 +238,23 @@ end; { cmpVerzeichnis }
 {$R *.dfm}
 
 { TForm1 }
+procedure TForm1.BeendenClick(Sender: TObject);
+begin
+      Halt(0);
+end;
+
+procedure TForm1.AnhaltenClick(Sender: TObject);
+begin
+      if not Pause then begin Pause           := true;
+                              Anhalten.Caption   := 'Fortsetzen';
+                              Beenden.Visible := true;
+                        end
+                   else begin Pause           := false;
+                              Anhalten.Caption   := 'Anhalten';
+                              Beenden.Visible := false;
+                        end;
+end;
+
 procedure TForm1.OnActivate1(Sender: TObject);
 begin
     Form1.Label10.Width := 995;
@@ -236,6 +263,8 @@ begin
     AnzPath1     := 0;
     ActualVerz   := GetCurrentDir;
     ActualVerz   := 'C:\Users';
+    Pause        := false;
+
     if ParamCount<2
     then SetErrField('Call with:   MH_CMP  source  target', 'ERROR')
     else begin
